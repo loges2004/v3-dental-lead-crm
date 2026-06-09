@@ -1,5 +1,5 @@
 import { authenticateRequest, json } from '../lib/auth.js';
-import { fetchUpcomingCalendarEvents } from '../lib/google.js';
+import { fetchUpcomingCalendarEvents, getConfiguredCalendarId } from '../lib/google.js';
 
 export default async function handler(req, res) {
   const auth = authenticateRequest(req);
@@ -13,7 +13,10 @@ export default async function handler(req, res) {
 
   try {
     const events = await fetchUpcomingCalendarEvents();
-    return json(res, 200, { events });
+    return json(res, 200, {
+      events,
+      calendarId: getConfiguredCalendarId(),
+    });
   } catch (e) {
     return json(res, 500, { error: e.message || 'Failed to load calendar events' });
   }
