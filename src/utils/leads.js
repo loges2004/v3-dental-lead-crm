@@ -43,6 +43,7 @@ export function sortByFollowUpPriority(leads) {
 export function filterLeads(leads, filters) {
   const {
     status,
+    clinicBranch,
     followUpDate,
     leadDate,
     nameQuery,
@@ -53,6 +54,7 @@ export function filterLeads(leads, filters) {
   let result = [...leads];
 
   if (status) result = result.filter((l) => l.status === status);
+  if (clinicBranch) result = result.filter((l) => l.clinicBranch === clinicBranch);
   if (followUpDate) result = result.filter((l) => l.followUpDate === followUpDate);
   if (leadDate) result = result.filter((l) => l.leadDate === leadDate);
   if (nameQuery?.trim()) {

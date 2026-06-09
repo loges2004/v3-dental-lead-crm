@@ -5,7 +5,7 @@ import { LeadEditModal } from '../components/LeadEditModal';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 import { StatusBadge } from '../components/StatusBadge';
 import { useLeads } from '../hooks/useLeads';
-import { STATUSES } from '../utils/constants';
+import { CLINIC_BRANCHES, STATUSES } from '../utils/constants';
 import { formatDisplayDate } from '../utils/dates';
 import { exportLeadsToExcel } from '../utils/exportExcel';
 import { filterLeads } from '../utils/leads';
@@ -14,6 +14,7 @@ const PAGE_SIZE = 10;
 
 const defaultFilters = {
   status: '',
+  clinicBranch: '',
   followUpDate: '',
   leadDate: '',
   nameQuery: '',
@@ -123,6 +124,18 @@ export function LeadListPage() {
             </option>
           ))}
         </select>
+        <select
+          className="input-field"
+          value={filters.clinicBranch}
+          onChange={(e) => setFilter('clinicBranch', e.target.value)}
+        >
+          <option value="">All branches</option>
+          {CLINIC_BRANCHES.map((branch) => (
+            <option key={branch} value={branch}>
+              {branch}
+            </option>
+          ))}
+        </select>
         <input
           type="date"
           className="input-field"
@@ -158,7 +171,7 @@ export function LeadListPage() {
           <option value="newest">Sort: newest leads</option>
           <option value="oldest">Sort: oldest leads</option>
         </select>
-        <button type="button" className="btn-secondary md:col-span-2 lg:col-span-3" onClick={clearFilters}>
+        <button type="button" className="btn-secondary md:col-span-2 lg:col-span-3 xl:col-span-2" onClick={clearFilters}>
           Clear filters
         </button>
       </div>
