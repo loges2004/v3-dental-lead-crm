@@ -47,6 +47,7 @@ export const api = {
   logout: () => request('/api/auth/logout', { method: 'POST' }),
   me: () => request('/api/auth/me'),
   getLeads: () => request('/api/leads'),
+  getCalendarEvents: () => request('/api/calendar/events'),
   createLead: (payload) => request('/api/leads', { method: 'POST', body: JSON.stringify(payload) }),
   updateLead: (id, payload) =>
     request(`/api/leads/item?id=${encodeURIComponent(id)}`, {

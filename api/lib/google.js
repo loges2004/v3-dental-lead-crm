@@ -225,6 +225,33 @@ export async function createFollowUpCalendarEvent(lead) {
   return created.data.id;
 }
 
+export async function fetchUpcomingCalendarEvents({ maxResults = 12, daysAhead = 30 } = {}) {
+  const calendarId = process.env.GOOGLE_CALENDAR_ID || 'primary';
+  const calendar = await getCalendarClient();
+  const timeMin = new Date().toISOString();
+  const timeMax = new Date(Date.now() + daysAhead * 24 * 60 * 60 * 1000).toISOString();
+  const res = await calendar.events.list({
+    calendarId,
+    timeMin,
+    timeMax,
+    maxResults,
+    singleEvents: true,
+    orderBy: 'startTime',
+  });
+  return (res.data.items || []).map((item) => {
+    const startRaw = item.start?.dateTime || item.start?.date || '';
+    const endRaw = item.end?.dateTime || item.end?.date || '';
+    return {
+      id: item.id,
+      title: item.summary || 'Event',
+      start: startRaw,
+      end: endRaw,
+      allDay: Boolean(item.start?.date && !item.start?.dateTime),
+      link: item.htmlLink || '',
+    };
+  });
+}
+
 export async function deleteCalendarEvent(eventId) {
   if (!eventId) return;
   const calendarId = process.env.GOOGLE_CALENDAR_ID || 'primary';

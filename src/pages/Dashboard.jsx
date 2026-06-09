@@ -6,6 +6,7 @@ import { StatusBadge } from '../components/StatusBadge';
 import { useLeads } from '../hooks/useLeads';
 import { STATUSES } from '../utils/constants';
 import { formatDisplayDate } from '../utils/dates';
+import { GoogleCalendarPanel } from '../components/GoogleCalendarPanel';
 import { computeDashboardStats, sortByFollowUpPriority } from '../utils/leads';
 
 export function DashboardPage() {
@@ -100,6 +101,8 @@ export function DashboardPage() {
           </ul>
         </section>
       </div>
+
+      <GoogleCalendarPanel />
     </div>
   );
 }

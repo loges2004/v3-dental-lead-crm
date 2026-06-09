@@ -40,6 +40,7 @@ const routes = [
   { method: 'POST', path: '/api/leads', handler: () => import('../api/leads/index.js') },
   { method: 'PUT', path: '/api/leads/item', handler: () => import('../api/leads/item.js') },
   { method: 'DELETE', path: '/api/leads/item', handler: () => import('../api/leads/item.js') },
+  { method: 'GET', path: '/api/calendar/events', handler: () => import('../api/calendar/events.js') },
 ];
 
 function matchLeadId(pathname) {
