@@ -5,12 +5,24 @@ import {
   createFollowUpCalendarEvent,
   updateLeadById,
 } from '../lib/google.js';
-import { DEFAULT_LEAD_SOURCE, LEAD_SOURCES, STATUSES } from '../lib/constants.js';
+import {
+  CLINIC_BRANCHES,
+  DEFAULT_CLINIC_BRANCH,
+  DEFAULT_LEAD_SOURCE,
+  LEAD_SOURCES,
+  STATUSES,
+} from '../lib/constants.js';
 
 function normalizeLeadSource(value) {
   const trimmed = value?.trim();
   if (trimmed && LEAD_SOURCES.includes(trimmed)) return trimmed;
   return DEFAULT_LEAD_SOURCE;
+}
+
+function normalizeClinicBranch(value) {
+  const trimmed = value?.trim();
+  if (trimmed && CLINIC_BRANCHES.includes(trimmed)) return trimmed;
+  return DEFAULT_CLINIC_BRANCH;
 }
 
 function todayISO() {
@@ -51,6 +63,7 @@ export default async function handler(req, res) {
       mobileNumber: mobileNumber.trim(),
       treatmentRequired: body.treatmentRequired?.trim() || '',
       leadSource: normalizeLeadSource(body.leadSource),
+      clinicBranch: normalizeClinicBranch(body.clinicBranch),
       leadDate: body.leadDate || todayISO(),
       followUpDate: body.followUpDate || '',
       status,

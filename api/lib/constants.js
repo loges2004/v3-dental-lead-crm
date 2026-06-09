@@ -20,7 +20,12 @@ export const SHEET_HEADERS = [
   'notes',
   'calendarEventId',
   'updatedAt',
+  'clinicBranch',
 ];
+
+export const CLINIC_BRANCHES = ['Sai Baba Colony', 'Kannapa Nagar'];
+
+export const DEFAULT_CLINIC_BRANCH = 'Sai Baba Colony';
 
 export const LEAD_SOURCES = [
   'Meta Ads',

@@ -1,12 +1,24 @@
 import { useState } from 'react';
-import { LEAD_SOURCES, STATUSES } from '../utils/constants';
+import {
+  CLINIC_BRANCHES,
+  DEFAULT_CLINIC_BRANCH,
+  LEAD_SOURCES,
+  STATUSES,
+} from '../utils/constants';
 
 export function LeadEditModal({ lead, onClose, onSave, saving }) {
-  const [form, setForm] = useState({ ...lead });
+  const [form, setForm] = useState({
+    ...lead,
+    clinicBranch: lead.clinicBranch || DEFAULT_CLINIC_BRANCH,
+  });
   const sourceOptions =
     form.leadSource && !LEAD_SOURCES.includes(form.leadSource)
       ? [...LEAD_SOURCES, form.leadSource]
       : LEAD_SOURCES;
+  const branchOptions =
+    form.clinicBranch && !CLINIC_BRANCHES.includes(form.clinicBranch)
+      ? [...CLINIC_BRANCHES, form.clinicBranch]
+      : CLINIC_BRANCHES;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -60,6 +72,21 @@ export function LeadEditModal({ lead, onClose, onSave, saving }) {
               {sourceOptions.map((source) => (
                 <option key={source} value={source}>
                   {source}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="text-sm font-medium">Clinic Branch</label>
+            <select
+              name="clinicBranch"
+              className="input-field mt-1"
+              value={form.clinicBranch}
+              onChange={handleChange}
+            >
+              {branchOptions.map((branch) => (
+                <option key={branch} value={branch}>
+                  {branch}
                 </option>
               ))}
             </select>

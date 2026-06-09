@@ -6,6 +6,7 @@ export function exportLeadsToExcel(leads, filename = 'v3-dental-clinic-leads.xls
     'Mobile Number': l.mobileNumber,
     Treatment: l.treatmentRequired,
     'Lead Source': l.leadSource,
+    'Clinic Branch': l.clinicBranch,
     'Lead Date': l.leadDate,
     'Follow-up Date': l.followUpDate,
     Status: l.status,

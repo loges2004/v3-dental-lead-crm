@@ -18,6 +18,10 @@ export const LEAD_SOURCES = [
 
 export const DEFAULT_LEAD_SOURCE = 'Meta Ads';
 
+export const CLINIC_BRANCHES = ['Sai Baba Colony', 'Kannapa Nagar'];
+
+export const DEFAULT_CLINIC_BRANCH = 'Sai Baba Colony';
+
 export const STATUS_COLORS = {
   'New Lead': 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200',
   Contacted: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-200',

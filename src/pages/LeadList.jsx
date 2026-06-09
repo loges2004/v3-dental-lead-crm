@@ -59,6 +59,7 @@ export function LeadListPage() {
         mobileNumber: form.mobileNumber,
         treatmentRequired: form.treatmentRequired,
         leadSource: form.leadSource,
+        clinicBranch: form.clinicBranch,
         leadDate: form.leadDate,
         followUpDate: form.followUpDate,
         status: form.status,
@@ -171,6 +172,7 @@ export function LeadListPage() {
               <th className="px-2 py-3">Mobile</th>
               <th className="px-2 py-3">Treatment</th>
               <th className="px-2 py-3">Source</th>
+              <th className="px-2 py-3">Branch</th>
               <th className="px-2 py-3">Lead Date</th>
               <th className="px-2 py-3">Follow-up</th>
               <th className="px-2 py-3">Status</th>
@@ -185,6 +187,7 @@ export function LeadListPage() {
                 <td className="px-2 py-3">{lead.mobileNumber}</td>
                 <td className="px-2 py-3">{lead.treatmentRequired || '—'}</td>
                 <td className="px-2 py-3">{lead.leadSource}</td>
+                <td className="px-2 py-3">{lead.clinicBranch || '—'}</td>
                 <td className="px-2 py-3">{formatDisplayDate(lead.leadDate)}</td>
                 <td className="px-2 py-3">
                   <div className="space-y-1">
@@ -231,6 +234,7 @@ export function LeadListPage() {
               {lead.treatmentRequired || 'No treatment noted'}
             </p>
             <div className="flex flex-wrap gap-2 text-xs text-slate-500">
+              <span>{lead.clinicBranch || 'Branch —'}</span>
               <span>Lead: {formatDisplayDate(lead.leadDate)}</span>
               <span>Follow-up: {formatDisplayDate(lead.followUpDate)}</span>
               <FollowUpBadge followUpDate={lead.followUpDate} />

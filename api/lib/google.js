@@ -73,14 +73,22 @@ export async function ensureSheetHeaders() {
       },
     });
   }
-  const range = `${SHEET_NAME}!A1:K1`;
-  const current = await sheets.spreadsheets.values.get({ spreadsheetId, range });
-  if (!current.data.values?.length) {
+  const headerRange = `${SHEET_NAME}!A1:L1`;
+  const current = await sheets.spreadsheets.values.get({ spreadsheetId, range: headerRange });
+  const headers = current.data.values?.[0] || [];
+  if (!headers.length) {
     await sheets.spreadsheets.values.update({
       spreadsheetId,
-      range,
+      range: headerRange,
       valueInputOption: 'RAW',
       requestBody: { values: [SHEET_HEADERS] },
+    });
+  } else if (!headers.includes('clinicBranch')) {
+    await sheets.spreadsheets.values.update({
+      spreadsheetId,
+      range: `${SHEET_NAME}!L1`,
+      valueInputOption: 'RAW',
+      requestBody: { values: [['clinicBranch']] },
     });
   }
 }
@@ -97,7 +105,7 @@ export async function fetchAllLeads() {
   await ensureSheetHeaders();
   const sheets = await getSheetsClient();
   const spreadsheetId = getSheetId();
-  const range = `${SHEET_NAME}!A2:K`;
+  const range = `${SHEET_NAME}!A2:L`;
   const res = await sheets.spreadsheets.values.get({ spreadsheetId, range });
   const rows = res.data.values || [];
   return rows
@@ -119,7 +127,7 @@ export async function appendLead(lead) {
   });
   await sheets.spreadsheets.values.append({
     spreadsheetId,
-    range: `${SHEET_NAME}!A:K`,
+    range: `${SHEET_NAME}!A:L`,
     valueInputOption: 'USER_ENTERED',
     insertDataOption: 'INSERT_ROWS',
     requestBody: { values: [row] },
@@ -136,7 +144,7 @@ export async function updateLeadById(id, updates) {
   await ensureSheetHeaders();
   const sheets = await getSheetsClient();
   const spreadsheetId = getSheetId();
-  const range = `${SHEET_NAME}!A2:K`;
+  const range = `${SHEET_NAME}!A2:L`;
   const res = await sheets.spreadsheets.values.get({ spreadsheetId, range });
   const rows = res.data.values || [];
   const index = rows.findIndex((row) => row[0] === id);
@@ -147,7 +155,7 @@ export async function updateLeadById(id, updates) {
   const newRow = SHEET_HEADERS.map((h) => merged[h] ?? '');
   await sheets.spreadsheets.values.update({
     spreadsheetId,
-    range: `${SHEET_NAME}!A${rowNum}:K${rowNum}`,
+    range: `${SHEET_NAME}!A${rowNum}:L${rowNum}`,
     valueInputOption: 'USER_ENTERED',
     requestBody: { values: [newRow] },
   });
@@ -161,7 +169,7 @@ export async function deleteLeadById(id) {
   const sheet = meta.data.sheets?.find((s) => s.properties?.title === SHEET_NAME);
   if (!sheet) return false;
   const sheetId = sheet.properties.sheetId;
-  const range = `${SHEET_NAME}!A2:K`;
+  const range = `${SHEET_NAME}!A2:L`;
   const res = await sheets.spreadsheets.values.get({ spreadsheetId, range });
   const rows = res.data.values || [];
   const index = rows.findIndex((row) => row[0] === id);

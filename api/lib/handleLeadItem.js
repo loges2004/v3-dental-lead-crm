@@ -6,7 +6,7 @@ import {
   createFollowUpCalendarEvent,
   deleteCalendarEvent,
 } from './google.js';
-import { LEAD_SOURCES, STATUSES } from './constants.js';
+import { CLINIC_BRANCHES, LEAD_SOURCES, STATUSES } from './constants.js';
 
 export async function handleLeadItem(req, res, id) {
   const auth = authenticateRequest(req);
@@ -35,6 +35,9 @@ export async function handleLeadItem(req, res, id) {
     }
     if (body.leadSource && !LEAD_SOURCES.includes(body.leadSource.trim())) {
       return json(res, 400, { error: 'Invalid lead source' });
+    }
+    if (body.clinicBranch && !CLINIC_BRANCHES.includes(body.clinicBranch.trim())) {
+      return json(res, 400, { error: 'Invalid clinic branch' });
     }
     try {
       const before = await getLeadById(id);

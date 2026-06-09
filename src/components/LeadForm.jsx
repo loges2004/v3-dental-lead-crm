@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import { DEFAULT_LEAD_SOURCE, LEAD_SOURCES, STATUSES } from '../utils/constants';
+import {
+  CLINIC_BRANCHES,
+  DEFAULT_CLINIC_BRANCH,
+  DEFAULT_LEAD_SOURCE,
+  LEAD_SOURCES,
+  STATUSES,
+} from '../utils/constants';
 import { todayISO } from '../utils/dates';
 
 const emptyForm = () => ({
@@ -7,6 +13,7 @@ const emptyForm = () => ({
   mobileNumber: '',
   treatmentRequired: '',
   leadSource: DEFAULT_LEAD_SOURCE,
+  clinicBranch: DEFAULT_CLINIC_BRANCH,
   leadDate: todayISO(),
   followUpDate: '',
   status: 'New Lead',
@@ -105,6 +112,25 @@ export function LeadForm({ onSubmit, submitting, submitLabel = 'Save & New' }) {
             {LEAD_SOURCES.map((source) => (
               <option key={source} value={source}>
                 {source}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="mb-1 block text-sm font-medium" htmlFor="clinicBranch">
+            Clinic Branch
+          </label>
+          <select
+            id="clinicBranch"
+            name="clinicBranch"
+            className="input-field"
+            value={form.clinicBranch}
+            onChange={handleChange}
+            required
+          >
+            {CLINIC_BRANCHES.map((branch) => (
+              <option key={branch} value={branch}>
+                {branch}
               </option>
             ))}
           </select>
