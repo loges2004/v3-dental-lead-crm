@@ -194,28 +194,25 @@ export async function deleteLeadById(id) {
   return true;
 }
 
-export function getConfiguredCalendarId() {
-  return process.env.GOOGLE_CALENDAR_ID || 'primary';
-}
-
 export async function createFollowUpCalendarEvent(lead) {
   if (!lead.followUpDate) return null;
-  const calendarId = getConfiguredCalendarId();
+  const calendarId = process.env.GOOGLE_CALENDAR_ID || 'primary';
   const calendar = await getCalendarClient();
-  const date = lead.followUpDate;
+  const start = new Date(`${lead.followUpDate}T09:00:00`);
+  const end = new Date(start);
+  end.setHours(10);
   const event = {
     summary: `Follow-up: ${lead.patientName}`,
     description: [
       `Mobile: ${lead.mobileNumber}`,
-      lead.clinicBranch ? `Branch: ${lead.clinicBranch}` : '',
       `Treatment: ${lead.treatmentRequired || '—'}`,
       `Status: ${lead.status}`,
       lead.notes ? `Notes: ${lead.notes}` : '',
     ]
       .filter(Boolean)
       .join('\n'),
-    start: { dateTime: `${date}T09:00:00`, timeZone: 'Asia/Kolkata' },
-    end: { dateTime: `${date}T10:00:00`, timeZone: 'Asia/Kolkata' },
+    start: { dateTime: start.toISOString(), timeZone: 'Asia/Kolkata' },
+    end: { dateTime: end.toISOString(), timeZone: 'Asia/Kolkata' },
     reminders: {
       useDefault: false,
       overrides: [
@@ -228,36 +225,9 @@ export async function createFollowUpCalendarEvent(lead) {
   return created.data.id;
 }
 
-export async function fetchUpcomingCalendarEvents({ maxResults = 12, daysAhead = 30 } = {}) {
-  const calendarId = getConfiguredCalendarId();
-  const calendar = await getCalendarClient();
-  const timeMin = new Date().toISOString();
-  const timeMax = new Date(Date.now() + daysAhead * 24 * 60 * 60 * 1000).toISOString();
-  const res = await calendar.events.list({
-    calendarId,
-    timeMin,
-    timeMax,
-    maxResults,
-    singleEvents: true,
-    orderBy: 'startTime',
-  });
-  return (res.data.items || []).map((item) => {
-    const startRaw = item.start?.dateTime || item.start?.date || '';
-    const endRaw = item.end?.dateTime || item.end?.date || '';
-    return {
-      id: item.id,
-      title: item.summary || 'Event',
-      start: startRaw,
-      end: endRaw,
-      allDay: Boolean(item.start?.date && !item.start?.dateTime),
-      link: item.htmlLink || '',
-    };
-  });
-}
-
 export async function deleteCalendarEvent(eventId) {
   if (!eventId) return;
-  const calendarId = getConfiguredCalendarId();
+  const calendarId = process.env.GOOGLE_CALENDAR_ID || 'primary';
   const calendar = await getCalendarClient();
   try {
     await calendar.events.delete({ calendarId, eventId });
