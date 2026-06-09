@@ -111,69 +111,113 @@ export function LeadListPage() {
         </div>
       </div>
 
-      <div className="card grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-        <select
-          className="input-field"
-          value={filters.status}
-          onChange={(e) => setFilter('status', e.target.value)}
-        >
-          <option value="">All statuses</option>
-          {STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
-        <select
-          className="input-field"
-          value={filters.clinicBranch}
-          onChange={(e) => setFilter('clinicBranch', e.target.value)}
-        >
-          <option value="">All branches</option>
-          {CLINIC_BRANCHES.map((branch) => (
-            <option key={branch} value={branch}>
-              {branch}
-            </option>
-          ))}
-        </select>
-        <input
-          type="date"
-          className="input-field"
-          value={filters.followUpDate}
-          onChange={(e) => setFilter('followUpDate', e.target.value)}
-          title="Follow-up date"
-        />
-        <input
-          type="date"
-          className="input-field"
-          value={filters.leadDate}
-          onChange={(e) => setFilter('leadDate', e.target.value)}
-          title="Lead date"
-        />
-        <input
-          className="input-field"
-          placeholder="Search name"
-          value={filters.nameQuery}
-          onChange={(e) => setFilter('nameQuery', e.target.value)}
-        />
-        <input
-          className="input-field"
-          placeholder="Search mobile"
-          value={filters.mobileQuery}
-          onChange={(e) => setFilter('mobileQuery', e.target.value)}
-        />
-        <select
-          className="input-field"
-          value={filters.sort}
-          onChange={(e) => setFilter('sort', e.target.value)}
-        >
-          <option value="followup">Sort: follow-up priority</option>
-          <option value="newest">Sort: newest leads</option>
-          <option value="oldest">Sort: oldest leads</option>
-        </select>
-        <button type="button" className="btn-secondary md:col-span-2 lg:col-span-3 xl:col-span-2" onClick={clearFilters}>
-          Clear filters
-        </button>
+      <div className="card grid gap-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <div>
+          <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400" htmlFor="filter-status">
+            Status
+          </label>
+          <select
+            id="filter-status"
+            className="input-field"
+            value={filters.status}
+            onChange={(e) => setFilter('status', e.target.value)}
+          >
+            <option value="">All statuses</option>
+            {STATUSES.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400" htmlFor="filter-branch">
+            Clinic branch
+          </label>
+          <select
+            id="filter-branch"
+            className="input-field"
+            value={filters.clinicBranch}
+            onChange={(e) => setFilter('clinicBranch', e.target.value)}
+          >
+            <option value="">All branches</option>
+            {CLINIC_BRANCHES.map((branch) => (
+              <option key={branch} value={branch}>
+                {branch}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400" htmlFor="filter-lead-date">
+            Lead date
+          </label>
+          <input
+            id="filter-lead-date"
+            type="date"
+            className="input-field input-date"
+            value={filters.leadDate}
+            onChange={(e) => setFilter('leadDate', e.target.value)}
+            aria-label="Filter by lead date"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400" htmlFor="filter-follow-up-date">
+            Follow-up date
+          </label>
+          <input
+            id="filter-follow-up-date"
+            type="date"
+            className="input-field input-date"
+            value={filters.followUpDate}
+            onChange={(e) => setFilter('followUpDate', e.target.value)}
+            aria-label="Filter by follow-up date"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400" htmlFor="filter-name">
+            Patient name
+          </label>
+          <input
+            id="filter-name"
+            className="input-field"
+            placeholder="Search name"
+            value={filters.nameQuery}
+            onChange={(e) => setFilter('nameQuery', e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400" htmlFor="filter-mobile">
+            Mobile number
+          </label>
+          <input
+            id="filter-mobile"
+            className="input-field"
+            placeholder="Search mobile"
+            value={filters.mobileQuery}
+            onChange={(e) => setFilter('mobileQuery', e.target.value)}
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-medium text-slate-600 dark:text-slate-400" htmlFor="filter-sort">
+            Sort by
+          </label>
+          <select
+            id="filter-sort"
+            className="input-field"
+            value={filters.sort}
+            onChange={(e) => setFilter('sort', e.target.value)}
+          >
+            <option value="followup">Follow-up priority</option>
+            <option value="newest">Newest leads</option>
+            <option value="oldest">Oldest leads</option>
+          </select>
+        </div>
+        <div className="flex items-end">
+          <button type="button" className="btn-secondary w-full" onClick={clearFilters}>
+            Clear filters
+          </button>
+        </div>
       </div>
 
       {/* Desktop table */}
