@@ -38,6 +38,8 @@ const routes = [
   { method: 'GET', path: '/api/auth/me', handler: () => import('../api/auth/me.js') },
   { method: 'GET', path: '/api/leads', handler: () => import('../api/leads/index.js') },
   { method: 'POST', path: '/api/leads', handler: () => import('../api/leads/index.js') },
+  { method: 'PUT', path: '/api/leads/item', handler: () => import('../api/leads/item.js') },
+  { method: 'DELETE', path: '/api/leads/item', handler: () => import('../api/leads/item.js') },
 ];
 
 function matchLeadId(pathname) {
@@ -50,8 +52,17 @@ const server = http.createServer(async (req, res) => {
   const pathname = url.pathname;
   req.query = Object.fromEntries(url.searchParams);
 
+  const route = routes.find((r) => r.method === req.method && r.path === pathname);
+  if (route) {
+    const mod = await route.handler();
+    const nodeRes = createRes(res);
+    req.body = await readBody(req);
+    await mod.default(req, nodeRes);
+    return;
+  }
+
   const leadId = matchLeadId(pathname);
-  if (leadId) {
+  if (leadId && leadId !== 'item') {
     req.query.id = leadId;
     const mod = await import('../api/leads/[id].js');
     const nodeRes = createRes(res);
@@ -60,16 +71,8 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  const route = routes.find((r) => r.method === req.method && r.path === pathname);
-  if (!route) {
-    res.statusCode = 404;
-    res.end(JSON.stringify({ error: 'Not found' }));
-    return;
-  }
-  const mod = await route.handler();
-  const nodeRes = createRes(res);
-  req.body = await readBody(req);
-  await mod.default(req, nodeRes);
+  res.statusCode = 404;
+  res.end(JSON.stringify({ error: 'Not found' }));
 });
 
 const PORT = 3001;

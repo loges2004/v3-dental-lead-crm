@@ -25,9 +25,16 @@ async function request(path, options = {}) {
       'Cannot reach API. Run: npm run dev:all (or npm run dev:api in a second terminal).'
     );
   }
-  const data = await res.json().catch(() => ({}));
+  const contentType = res.headers.get('content-type') || '';
+  const data = contentType.includes('application/json')
+    ? await res.json().catch(() => ({}))
+    : {};
   if (!res.ok) {
-    const err = new Error(data.error || 'Request failed');
+    const fallback =
+      !contentType.includes('application/json') && res.status === 404
+        ? 'API route not found. Redeploy the latest code on Vercel.'
+        : 'Request failed';
+    const err = new Error(data.error || fallback);
     err.status = res.status;
     throw err;
   }
@@ -42,10 +49,10 @@ export const api = {
   getLeads: () => request('/api/leads'),
   createLead: (payload) => request('/api/leads', { method: 'POST', body: JSON.stringify(payload) }),
   updateLead: (id, payload) =>
-    request(`/api/leads/${encodeURIComponent(id)}`, {
+    request(`/api/leads/item?id=${encodeURIComponent(id)}`, {
       method: 'PUT',
       body: JSON.stringify(payload),
     }),
   deleteLead: (id) =>
-    request(`/api/leads/${encodeURIComponent(id)}`, { method: 'DELETE' }),
+    request(`/api/leads/item?id=${encodeURIComponent(id)}`, { method: 'DELETE' }),
 };
